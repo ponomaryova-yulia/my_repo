@@ -1,0 +1,60 @@
+ =======================================================================
+     CONTROL:  BUTTON Initialize Header [HIDDEN]
+     EVENT:  Button Clicked
+-----------------------------------------------------------------------
+     OPT: Using Defaults
+0001 Set Control Focus(FC Long Address Number Sold To)
+0002 //
+0003 // Initialize the previous field value variables
+0004 //
+0005 Press Button(FC Set Previous Field Values)
+0006 FC Previous Order Number = SI mnPreviousOrderNumber
+0007 FC Previous Order Type = SI szPreviousOrderType
+0008 FC Previous Order Company = SI szPreviousOrderCompany
+0009 //
+0010 S421007A Initialize Sales Order Header
+        SI szSessionKey -> BF szSessionKey
+        SI szViewVersion -> BF szViewVersion
+        VA frm_cAdvancedPricingYN <- BF cAdvancedPricing
+        VA frm_cTemplatesEnabled <- BF cTemplateProcessing
+        VA frm_cOrderPromisingFlag <- BF cOrderPromisingFlag
+        VA frm_cOrderMode <- BF cOrderMode
+        VA frm_cAddressBookRevisions <- BF cAddressBookRevisions
+        VA frm_cPrePaymentFlag <- BF cPrePaymentFlag
+        VA frm_cOrderFulfillmentEnabled <- BF cOrderFulfillmentEnabled
+        VA frm_cShoppingCartModeEnabled <- BF cShoppingCartModeEnabled
+        VA frm_cApparelEnabled <- BF cApparelEnabled
+        VA frm_cTranferOrderEnabled_EV01 <- BF cTransferOrderEnabled
+        VA frm_cStoreAndForwardEnabled <- BF cStoreAndForwardEnabled
+        VA frm_cInterBranchEnabled_EV01 <- BF cInterBranchEnabled
+0011 //
+0012 // cHeaderDirty is initialized to 0 when header was added/edited first
+0013 If SI cHeaderFirst is equal to "1" And VA frm_cOrderMode is not equal to "C"
+0014    VA frm_cHeaderDirty = "0"
+0015 Else
+0016    VA frm_cHeaderDirty = "1"
+0017 End If
+0018 //
+0019 If VA frm_cOrderMode is not equal to "U"
+0020    Press Button(FC Create Form Exits)
+0021 End If
+0022 //
+0023 // ****************************************************************
+0024 // GSI Begin
+0025 // GSI/Sbeebe  11-25-13
+0026 // ****************************************************************
+0027 // Retreive the current custom fields from the F4201
+0028 F4201.Fetch Single
+        SI szOrderCompany =  TK Order Company (Order Number)
+        SI mnOrderNo =  TK Document (Order No, Invoice, etc.)
+        SI szOrderType =  TK Order Type
+        FC Paid By <- TK Address Number - Paid By
+        FC Deliver To <- TK Address Number - Deliver To
+0029 //
+0030 // Get paid to name
+0031 F0101.Fetch Single
+        FC Paid By =  TK Address Number
+        FC PAID BY <- TK Name - Alpha
+0032 // ****************************************************************
+0033 // GSI End
+0034 // ****************************************************************

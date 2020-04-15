@@ -1,0 +1,83 @@
+=======================================================================
+     CONTROL:  BUTTON Process Header [HIDDEN]
+     EVENT:  Button Clicked
+-----------------------------------------------------------------------
+     evt_nIsRefreshRequired
+     OPT: Using Defaults
+0001 If VA frm_cHeaderDirty is equal to "1"
+0002    // *************************************************************
+0003    // GSI Begin
+0004    // GSI/Scott Beebe  1-8-14
+0005    // *************************************************************
+0006    // Save the custom fields to cache before calling the Edit Header form.
+0007    Call Function(<Current Subform>, FC AbcSaveCustomDataToCache)
+0008    // *************************************************************
+0009    // GSI End
+0010    // *************************************************************
+0011    //
+0012    VA frm_nSalesOrderAction = VA frm_nPROCESS_SO_HEADER
+0013    // SAR 8955606 - Taxed Prices Enhancement
+0014    If SV Form_ Mode is equal to CO COPY_MODE
+0015       VA frm_cUseTaxedPrices = FC Use Taxed Prices
+0016    End If
+0017    // SAR 8955606 - Map Use Taxed Prices Variable
+0018    S421007A Sales Order Header View Controller 0019    //
+0020    // SAR 8955606 - Taxed Prices Enhancement
+0021    FC Use Taxed Prices = VA frm_cUseTaxedPrices
+0022    //
+0023    VA frm_nSalesOrderAction = "0"
+0024    //
+0025    Press Button(FC Set Previous Field Values)
+0026    //
+0027    If VA frm_nViewSelectionRequired is equal to "1"
+0028       Dispatch Next View
+              SI szSessionKey -> BF szSessionKey
+              <Zero> -> BF mnLineKey
+              VA evt_nIsRefreshRequired <- BF nIsRefreshRequired
+0029    End If
+0030    //
+0031    If VA evt_nIsRefreshRequired is equal to "1"
+0032       SI nMessageType = VA frm_nMSG_TEMPLATE_ITEM_SELECTD
+0033       Press Button(FC Send Message)
+0034    End If
+0035    //
+0036    If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS
+0037       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED
+0038       Press Button(FC Send Message)
+0039       //
+0040       VA frm_cHeaderDirty = "0"
+0041       //
+0042       // SAR 8299676 - Send the Error message to the parent if we have header
+0043       // processed with Error.
+0044    Else
+0045       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED_ERR
+0046       Press Button(FC Send Message)
+0047    End If
+0048    Press Button(FC Create Form Exits)
+0049    //
+0050    // *************************************************************
+0051    // GSI Begin
+0052    // GSI/Scott Beebe  1-8-14
+0053    // *************************************************************
+0054    // The order header form is called in an "Auto Close" code.  The header form
+0055    // does some work to update detail lines for fields marked in P40HDR.  To get
+0056    // the "deliver to" value to update all detail lines to the new value we call
+0057    // the header form, let it do its work, and then close.  This allows us to
+0058    // take advantage of the STD functionality that will update detail lines with
+0059    // the header changes.
+0060    //
+0061    // The STD functionality seems to only work when revising an existing order
+0062    // and not on new orders.
+0063    //
+0064    Call( App:P5542101 , Form:W5542101E , Ver: SI szViewVersion )
+           SI szSessionKey -> FI szSessionKey
+           "1" -> FI cAutoClose
+0065    //
+0066    // After calling the header form we need to force a refresh of the detail
+0067    // lines in the grid.
+0068    SI nMessageType = VA frm_nMSG_HDR_TO_DETAIL_UPDATE
+0069    Press Button(FC Send Message)
+0070    // *************************************************************
+0071    // GSI End
+0072    // *************************************************************
+0073 End If

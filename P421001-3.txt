@@ -1,0 +1,19 @@
+=======================================================================
+     CONTROL:  BUTTON ABCSaveCustomData [HIDDEN]
+     EVENT:  Button Clicked
+-----------------------------------------------------------------------
+     OPT: Using Defaults
+0001 // GSI BEGIN
+0002 // GSI
+0003 // Save the data for the custom fields we are showing on the Enter Order
+0004 // header section.
+0005 VA frm_KeyName_DL010 = "DelToPaidTo"
+0006 VA frm_Value1_DL010 = FC Long Address Number Delivered To
+0007 VA frm_Value2_DL010 = FC Long Address Number Paid By
+0008 Load Keyed Cache
+        SI szSessionKey -> BF szSessionKey
+        VA frm_KeyName_DL010 -> BF szKey1
+        VA frm_Value1_DL010 -> BF szValue1
+        VA frm_Value2_DL010 -> BF szValue2
+
+

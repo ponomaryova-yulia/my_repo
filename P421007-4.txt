@@ -1,0 +1,18 @@
+=======================================================================
+     CONTROL:  FUNCTION AbcSaveCustomDataToCache
+     EVENT:  Function Body
+-----------------------------------------------------------------------
+     OPT: Using Defaults
+0001 // GSI/Scott Beebe  11-25-13
+0002 // Save the custom data on the form to cache
+0003 //
+0004 VA frm_KeyName_DL010 = "DelToPaidTo"
+0005 VA frm_Value1_DL010 = [FC Deliver To]
+0006 VA frm_Value2_DL010 = [FC Paid By]
+0007 Load Keyed Cache
+        SI szSessionKey -> BF szSessionKey
+        VA frm_KeyName_DL010 -> BF szKey1
+        VA frm_Value1_DL010 -> BF szValue1
+        VA frm_Value2_DL010 -> BF szValue2
+
+
