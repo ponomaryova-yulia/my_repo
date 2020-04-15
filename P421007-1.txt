@@ -8,28 +8,11 @@
      OPT: Using Defaults
 0001 //
 0002 //
-0003 // *************************************************************
-0004 // GSI Begin
-0005 // GSI/Scott Beebe  12-2-13
-0006 // *************************************************************
-0007 // Save the custom fields to cache before calling the Edit Header form.
-0008 Call Function(<Current Subform>, FC AbcSaveCustomDataToCache)
-0009 // *************************************************************
-0010 // GSI End
-0011 // *************************************************************
 0012 Press Button(FC Process Header)
 0013 // Make sure header has been processed successfully before exiting to the
 0014 // Header Revisions form
 0015 //
 0016 If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS Or VA frm_cOrderMode is not equal to "U"
-0017 !    Call( App:P42101 , Form:W42101E , Ver: SI szViewVersion )
-     !       SI szSessionKey -> FI szSessionKey
-     !       VA evt_cCancelClicked <- FI cCancelClicked
-     !       VA evt_nHdrChangesPushedToLines <- FI nHdrChangesPushedToLines
-0018    Call( App:P5542101 , Form:W5542101E , Ver: SI szViewVersion )
-           SI szSessionKey -> FI szSessionKey
-           VA evt_cCancelClicked <- FI cCancelClicked
-           VA evt_nHdrChangesPushedToLines <- FI nHdrChangesPushedToLines
 0019    If VA evt_cCancelClicked is not equal to "1"
 0020       // Editing header is allowed in Add or Copy mode to clear errors caused by
 0021       // fields not displayed in P421007.  If this is done, the header must be
@@ -48,42 +31,6 @@
 0034       End If
 0035       //
 0036       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED
-
 0037       Press Button(FC Send Message)
-0038       //
-0039       // *************************************************************
-0040       // GSI Begin
-0041       // GSI/Scott Beebe  12-2-13
-0042       // *************************************************************
-0043       // Get the custom values from cache and assign to FC fields.
-0044       VA frm_KeyName_DL010 = "DelToPaidTo"
-0045       Retreive Keyed Cache Value
-              SI szSessionKey -> BF szSessionKey
-              VA frm_KeyName_DL010 -> BF szKey1
-              VA frm_Value1_DL010 <- BF szValue1
-              VA frm_Value2_DL010 <- BF szValue2
-0046       If VA frm_Value1_DL010 is greater than <Blank>
-0047          FC Deliver To = [VA frm_Value1_DL010]
-0048       End If
-0049       If VA frm_Value2_DL010 is greater than <Blank>
-0050          FC Paid By = [VA frm_Value2_DL010]
-0051          // Get paid to name
-0052          F0101.Fetch Single
-                 FC Paid By =  TK Address Number
-                 FC PAID BY <- TK Name - Alpha
-0053       End If
-0054       // *************************************************************
-0055       // GSI End
-0056       // *************************************************************
 0057    End If
 0058 End If
-0059 // *************************************************************
-0060 // GSI Begin
-0061 // GSI/Scott Beebe  12-2-13
-0062 // *************************************************************
-0063 // Delete the custom cache
-0064 ! Delete Keyed Cache
-     !    SI szSessionKey -> BF szSessionKey
-0065 // *************************************************************
-0066 // GSI End
-0067 // ************************************************************* 
