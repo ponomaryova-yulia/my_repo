@@ -5,16 +5,6 @@
      evt_nIsRefreshRequired
      OPT: Using Defaults
 0001 If VA frm_cHeaderDirty is equal to "1"
-0002    // *************************************************************
-0003    // GSI Begin
-0004    // GSI/Scott Beebe  1-8-14
-0005    // *************************************************************
-0006    // Save the custom fields to cache before calling the Edit Header form.
-0007    Call Function(<Current Subform>, FC AbcSaveCustomDataToCache)
-0008    // *************************************************************
-0009    // GSI End
-0010    // *************************************************************
-0011    //
 0012    VA frm_nSalesOrderAction = VA frm_nPROCESS_SO_HEADER
 0013    // SAR 8955606 - Taxed Prices Enhancement
 0014    If SV Form_ Mode is equal to CO COPY_MODE
@@ -54,30 +44,4 @@
 0046       Press Button(FC Send Message)
 0047    End If
 0048    Press Button(FC Create Form Exits)
-0049    //
-0050    // *************************************************************
-0051    // GSI Begin
-0052    // GSI/Scott Beebe  1-8-14
-0053    // *************************************************************
-0054    // The order header form is called in an "Auto Close" code.  The header form
-0055    // does some work to update detail lines for fields marked in P40HDR.  To get
-0056    // the "deliver to" value to update all detail lines to the new value we call
-0057    // the header form, let it do its work, and then close.  This allows us to
-0058    // take advantage of the STD functionality that will update detail lines with
-0059    // the header changes.
-0060    //
-0061    // The STD functionality seems to only work when revising an existing order
-0062    // and not on new orders.
-0063    //
-0064    Call( App:P5542101 , Form:W5542101E , Ver: SI szViewVersion )
-           SI szSessionKey -> FI szSessionKey
-           "1" -> FI cAutoClose
-0065    //
-0066    // After calling the header form we need to force a refresh of the detail
-0067    // lines in the grid.
-0068    SI nMessageType = VA frm_nMSG_HDR_TO_DETAIL_UPDATE
-0069    Press Button(FC Send Message)
-0070    // *************************************************************
-0071    // GSI End
-0072    // *************************************************************
 0073 End If
