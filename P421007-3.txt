@@ -38,23 +38,3 @@
 0019 If VA frm_cOrderMode is not equal to "U"
 0020    Press Button(FC Create Form Exits)
 0021 End If
-0022 //
-0023 // ****************************************************************
-0024 // GSI Begin
-0025 // GSI/Sbeebe  11-25-13
-0026 // ****************************************************************
-0027 // Retreive the current custom fields from the F4201
-0028 F4201.Fetch Single
-        SI szOrderCompany =  TK Order Company (Order Number)
-        SI mnOrderNo =  TK Document (Order No, Invoice, etc.)
-        SI szOrderType =  TK Order Type
-        FC Paid By <- TK Address Number - Paid By
-        FC Deliver To <- TK Address Number - Deliver To
-0029 //
-0030 // Get paid to name
-0031 F0101.Fetch Single
-        FC Paid By =  TK Address Number
-        FC PAID BY <- TK Name - Alpha
-0032 // ****************************************************************
-0033 // GSI End
-0034 // ****************************************************************
