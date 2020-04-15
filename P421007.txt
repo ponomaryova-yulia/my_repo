@@ -42,28 +42,11 @@
      OPT: Using Defaults
 0001 //
 0002 //
-0003 // *************************************************************
-0004 // GSI Begin
-0005 // GSI/Scott Beebe  12-2-13
-0006 // *************************************************************
-0007 // Save the custom fields to cache before calling the Edit Header form.
-0008 Call Function(<Current Subform>, FC AbcSaveCustomDataToCache)
-0009 // *************************************************************
-0010 // GSI End
-0011 // *************************************************************
 0012 Press Button(FC Process Header)
 0013 // Make sure header has been processed successfully before exiting to the
 0014 // Header Revisions form
 0015 //
 0016 If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS Or VA frm_cOrderMode is not equal to "U"
-0017 !    Call( App:P42101 , Form:W42101E , Ver: SI szViewVersion )
-     !       SI szSessionKey -> FI szSessionKey
-     !       VA evt_cCancelClicked <- FI cCancelClicked
-     !       VA evt_nHdrChangesPushedToLines <- FI nHdrChangesPushedToLines
-0018    Call( App:P5542101 , Form:W5542101E , Ver: SI szViewVersion )
-           SI szSessionKey -> FI szSessionKey
-           VA evt_cCancelClicked <- FI cCancelClicked
-           VA evt_nHdrChangesPushedToLines <- FI nHdrChangesPushedToLines
 0019    If VA evt_cCancelClicked is not equal to "1"
 0020       // Editing header is allowed in Add or Copy mode to clear errors caused by
 0021       // fields not displayed in P421007.  If this is done, the header must be
@@ -85,42 +68,10 @@
 
 0037       Press Button(FC Send Message)
 0038       //
-0039       // *************************************************************
-0040       // GSI Begin
-0041       // GSI/Scott Beebe  12-2-13
-0042       // *************************************************************
-0043       // Get the custom values from cache and assign to FC fields.
-0044       VA frm_KeyName_DL010 = "DelToPaidTo"
-0045       Retreive Keyed Cache Value
-              SI szSessionKey -> BF szSessionKey
-              VA frm_KeyName_DL010 -> BF szKey1
-              VA frm_Value1_DL010 <- BF szValue1
-              VA frm_Value2_DL010 <- BF szValue2
-0046       If VA frm_Value1_DL010 is greater than <Blank>
-0047          FC Deliver To = [VA frm_Value1_DL010]
-0048       End If
-0049       If VA frm_Value2_DL010 is greater than <Blank>
-0050          FC Paid By = [VA frm_Value2_DL010]
-0051          // Get paid to name
-0052          F0101.Fetch Single
-                 FC Paid By =  TK Address Number
-                 FC PAID BY <- TK Name - Alpha
-0053       End If
-0054       // *************************************************************
-0055       // GSI End
-0056       // *************************************************************
 0057    End If
 0058 End If
-0059 // *************************************************************
-0060 // GSI Begin
-0061 // GSI/Scott Beebe  12-2-13
-0062 // *************************************************************
-0063 // Delete the custom cache
-0064 ! Delete Keyed Cache
-     !    SI szSessionKey -> BF szSessionKey
-0065 // *************************************************************
-0066 // GSI End
-0067 // ************************************************************* 
+
+
 =======================================================================
      CONTROL:  BUTTON Process Header [HIDDEN]
      EVENT:  Button Clicked
@@ -128,15 +79,6 @@
      evt_nIsRefreshRequired
      OPT: Using Defaults
 0001 If VA frm_cHeaderDirty is equal to "1"
-0002    // *************************************************************
-0003    // GSI Begin
-0004    // GSI/Scott Beebe  1-8-14
-0005    // *************************************************************
-0006    // Save the custom fields to cache before calling the Edit Header form.
-0007    Call Function(<Current Subform>, FC AbcSaveCustomDataToCache)
-0008    // *************************************************************
-0009    // GSI End
-0010    // *************************************************************
 0011    //
 0012    VA frm_nSalesOrderAction = VA frm_nPROCESS_SO_HEADER
 0013    // SAR 8955606 - Taxed Prices Enhancement
@@ -178,31 +120,6 @@
 0047    End If
 0048    Press Button(FC Create Form Exits)
 0049    //
-0050    // *************************************************************
-0051    // GSI Begin
-0052    // GSI/Scott Beebe  1-8-14
-0053    // *************************************************************
-0054    // The order header form is called in an "Auto Close" code.  The header form
-0055    // does some work to update detail lines for fields marked in P40HDR.  To get
-0056    // the "deliver to" value to update all detail lines to the new value we call
-0057    // the header form, let it do its work, and then close.  This allows us to
-0058    // take advantage of the STD functionality that will update detail lines with
-0059    // the header changes.
-0060    //
-0061    // The STD functionality seems to only work when revising an existing order
-0062    // and not on new orders.
-0063    //
-0064    Call( App:P5542101 , Form:W5542101E , Ver: SI szViewVersion )
-           SI szSessionKey -> FI szSessionKey
-           "1" -> FI cAutoClose
-0065    //
-0066    // After calling the header form we need to force a refresh of the detail
-0067    // lines in the grid.
-0068    SI nMessageType = VA frm_nMSG_HDR_TO_DETAIL_UPDATE
-0069    Press Button(FC Send Message)
-0070    // *************************************************************
-0071    // GSI End
-0072    // *************************************************************
 0073 End If
 
 
@@ -247,25 +164,6 @@
 0020    Press Button(FC Create Form Exits)
 0021 End If
 0022 //
-0023 // ****************************************************************
-0024 // GSI Begin
-0025 // GSI/Sbeebe  11-25-13
-0026 // ****************************************************************
-0027 // Retreive the current custom fields from the F4201
-0028 F4201.Fetch Single
-        SI szOrderCompany =  TK Order Company (Order Number)
-        SI mnOrderNo =  TK Document (Order No, Invoice, etc.)
-        SI szOrderType =  TK Order Type
-        FC Paid By <- TK Address Number - Paid By
-        FC Deliver To <- TK Address Number - Deliver To
-0029 //
-0030 // Get paid to name
-0031 F0101.Fetch Single
-        FC Paid By =  TK Address Number
-        FC PAID BY <- TK Name - Alpha
-0032 // ****************************************************************
-0033 // GSI End
-0034 // ****************************************************************
 
 
 Subform Function
@@ -273,17 +171,4 @@ Subform Function
      CONTROL:  FUNCTION AbcSaveCustomDataToCache
      EVENT:  Function Body
 -----------------------------------------------------------------------
-     OPT: Using Defaults
-0001 // GSI/Scott Beebe  11-25-13
-0002 // Save the custom data on the form to cache
-0003 //
-0004 VA frm_KeyName_DL010 = "DelToPaidTo"
-0005 VA frm_Value1_DL010 = [FC Deliver To]
-0006 VA frm_Value2_DL010 = [FC Paid By]
-0007 Load Keyed Cache
-        SI szSessionKey -> BF szSessionKey
-        VA frm_KeyName_DL010 -> BF szKey1
-        VA frm_Value1_DL010 -> BF szValue1
-        VA frm_Value2_DL010 -> BF szValue2
-
 
