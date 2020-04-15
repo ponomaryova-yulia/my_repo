@@ -20,15 +20,6 @@
 0032    End If
 0033    //
 0034    If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_PENDING Or VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS
-0035       // ************************************************************************
-0036       // GSI Begin
-0037       // GSI
-0038       // ************************************************************************
-0039       // Save the custom field values.
-0040       Press Button(FC ABCSaveCustomData)
-0041       // ************************************************************************
-0042       // GSI End
-0043       // ************************************************************************
 0044       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED
 0045       Press Button(FC Send Message)
 0046       //
