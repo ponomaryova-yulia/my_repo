@@ -22,6 +22,15 @@ Listing of ER for Application : Sales Order Header Reusable Subform (P421001)
 0032    End If
 0033    //
 0034    If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_PENDING Or VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS
+0035       // ************************************************************************
+0036       // GSI Begin
+0037       // GSI
+0038       // ************************************************************************
+0039       // Save the custom field values.
+0040       Press Button(FC ABCSaveCustomData)
+0041       // ************************************************************************
+0042       // GSI End
+0043       // ************************************************************************
 0044       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED
 0045       Press Button(FC Send Message)
 0046       //
@@ -40,6 +49,38 @@ Listing of ER for Application : Sales Order Header Reusable Subform (P421001)
 0004 // SAR 8955606 - Map Use Taxed Prices Variable
 0005 S421001E Sales Order Header View Controller
 0006 VA frm_nSalesOrderAction = "0"
+0007 //
+0008 // **************************************************************
+0009 // GSI Begin
+0010 // GSI
+0011 // **************************************************************
+0012 // Get the data for the custom fields we are showing on the Enter Order
+0013 // header section.
+0014 VA frm_KeyName_DL010 = "DelToPaidTo"
+0015 Retreive Keyed Cache Value
+        SI szSessionKey -> BF szSessionKey
+        VA frm_KeyName_DL010 -> BF szKey1
+        VA frm_Value1_DL010 <- BF szValue1
+        VA frm_Value2_DL010 <- BF szValue2
+0016 If VA frm_Value1_DL010 is greater than <Blank>
+0017    FC Long Address Number Delivered To = VA frm_Value1_DL010
+0018    Scrub Address Number
+           FC Long Address Number Delivered To <> BF szAlternateAddressKey
+           FC DeliveredToAddressNo <- BF mnAddressNumber
+           "5" -> BF cInputSelection
+           FC DELIVERED TO DESC <- BF szNameAlpha
+0019 End If
+0020 If VA frm_Value2_DL010 is greater than <Blank>
+0021    FC Long Address Number Paid By = VA frm_Value2_DL010
+0022    Scrub Address Number
+           FC Long Address Number Paid By <> BF szAlternateAddressKey
+           FC PaidByAddressNo <- BF mnAddressNumber
+           "5" -> BF cInputSelection
+           FC PAID BY DESC <- BF szNameAlpha
+0023 End If
+0024 // **************************************************************
+0025 // GSI End
+0026 // **************************************************************
 0027 //
 0028 FC OP Partial Order Shipments Allowed = VA frm_cOPPartialOrderShipments
 0029 FC OP Partial Shipments Allowed = VA frm_cOPPartialShipmentsAllowed
@@ -50,3 +91,23 @@ Listing of ER for Application : Sales Order Header Reusable Subform (P421001)
 0034 FC Use Taxed Prices = VA frm_cUseTaxedPrices_UTP
 0035 //
 0036 Press Button(FC Set Previous Field Values)
+
+=======================================================================
+     CONTROL:  BUTTON ABCSaveCustomData [HIDDEN]
+     EVENT:  Button Clicked
+-----------------------------------------------------------------------
+     OPT: Using Defaults
+0001 // GSI BEGIN
+0002 // GSI
+0003 // Save the data for the custom fields we are showing on the Enter Order
+0004 // header section.
+0005 VA frm_KeyName_DL010 = "DelToPaidTo"
+0006 VA frm_Value1_DL010 = FC Long Address Number Delivered To
+0007 VA frm_Value2_DL010 = FC Long Address Number Paid By
+0008 Load Keyed Cache
+        SI szSessionKey -> BF szSessionKey
+        VA frm_KeyName_DL010 -> BF szKey1
+        VA frm_Value1_DL010 -> BF szValue1
+        VA frm_Value2_DL010 -> BF szValue2
+
+
