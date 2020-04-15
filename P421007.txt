@@ -78,7 +78,7 @@
 -----------------------------------------------------------------------
      evt_nIsRefreshRequired
      OPT: Using Defaults
-0001 If VA frm_cHeaderDirty is equal to "1"
+0001 If VA frm_cHeaderDirty is not equal to "1"
 0011    //
 0012    VA frm_nSalesOrderAction = VA frm_nPROCESS_SO_HEADER
 0013    // SAR 8955606 - Taxed Prices Enhancement
@@ -136,6 +136,7 @@
 0006 FC Previous Order Number = SI mnPreviousOrderNumber
 0007 FC Previous Order Type = SI szPreviousOrderType
 0008 FC Previous Order Company = SI szPreviousOrderCompany
+0008 FC Previous Order Company Type = SI szPreviousOrderCompanyType
 0009 //
 0010 S421007A Initialize Sales Order Header
         SI szSessionKey -> BF szSessionKey
@@ -146,8 +147,9 @@
         VA frm_cOrderMode <- BF cOrderMode
         VA frm_cAddressBookRevisions <- BF cAddressBookRevisions
         VA frm_cPrePaymentFlag <- BF cPrePaymentFlag
-        VA frm_cOrderFulfillmentEnabled <- BF cOrderFulfillmentEnabled
         VA frm_cShoppingCartModeEnabled <- BF cShoppingCartModeEnabled
+        VA frm_cdOrderFulfillmentEnabled <- BF cdOrderFulfillmentEnabled
+        VA frm_cdShoppingCartModeEnabled <- BF cdShoppingCartModeEnabled
         VA frm_cApparelEnabled <- BF cApparelEnabled
         VA frm_cTranferOrderEnabled_EV01 <- BF cTransferOrderEnabled
         VA frm_cStoreAndForwardEnabled <- BF cStoreAndForwardEnabled
