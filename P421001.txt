@@ -1,0 +1,40 @@
+Listing of ER for Application : Sales Order Header Reusable Subform (P421001)
+
+=======================================================================
+     CONTROL:  BUTTON Process Header [HIDDEN]
+     EVENT:  Button Clicked
+-----------------------------------------------------------------------
+	.
+	.
+	.
+0023    Press Button(FC Set Previous Field Values)
+0024    //
+0025    If VA frm_nViewSelectionRequired is equal to "1"
+0026       Dispatch Next View
+              SI szSessionKey -> BF szSessionKey
+              <Zero> -> BF mnLineKey
+              VA evt_nIsRefreshRequired <- BF nIsRefreshRequired
+0027    End If
+0028    //
+0029    If VA evt_nIsRefreshRequired is equal to "1"
+0030       SI nMessageType = VA frm_nMSG_TEMPLATE_ITEM_SELECTD
+0031       Press Button(FC Send Message)
+0032    End If
+0033    //
+0034    If VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_PENDING Or VA frm_cHeaderProcessStatus is equal to VA frm_cHEADER_STATUS_SUCCESS
+0035       // ************************************************************************
+0036       // GSI Begin
+0037       // GSI
+0038       // ************************************************************************
+0039       // Save the custom field values.
+0040       Press Button(FC ABCSaveCustomData)
+0041       // ************************************************************************
+0042       // GSI End
+0043       // ************************************************************************
+0044       SI nMessageType = VA frm_nMSG_HEADER_PROCESSED
+0045       Press Button(FC Send Message)
+0046       //
+0047       VA frm_cHeaderDirty = "0"
+0048    End If
+0049 End If
+
