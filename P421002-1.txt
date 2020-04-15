@@ -7,18 +7,3 @@
 0178 If GC Demand Key is greater than <Zero> And VA frm_cDemandSchedEnabled is equal to "1"
 0179    Disable Control(FC Cancel &Line)
 0180 End If
-0181 // ***************************************************************************
-0182 // GSI/Larry Stocks, 10/21/13
-0183 // Added Reference 2 (VR02) to form
-0184 // ***************************************************************************
-0185 //
-0186 F4211.Fetch Single
-        SI szOrderCompany =  TK Order Company (Order Number)
-        SI mnOrderNumber =  TK Document (Order No, Invoice, etc.)
-        SI szOrderType =  TK Order Type
-        GC Line Number =  TK Line Number
-        GC Reference 2 <- TK Reference 2
-0187 //
-0188 // ***************************************************************************
-0189 // GSI/Larry Stocks, 10/21/13
-0190 // ***************************************************************************
