@@ -2,10 +2,11 @@
      CONTROL:  GRID SOLines
      EVENT:  Row is Entered
 -----------------------------------------------------------------------
+0175 //Disable Control
 0176 //
 0177 // 7361010
-0178 If GC Demand Key is greater than <Zero> And VA frm_cDemandSchedEnabled is equal to "1"
-0179    Disable Control(FC Cancel &Line)
+0178 If GC Demand Key is less than <Zero> Or VA frm_cDemandSchedEnabled is not equal to "1"
+0179    Enable Control(FC Cancel &Line)
 0180 End If
 
 
@@ -22,9 +23,6 @@
 0054          Press Button(FC Cancel &Line)
 0055       Else
 0056          VA frm_nSalesOrderAction = VA frm_nPROCESS_SALES_ORDER_LINE
-0057          // SAR 8180472
-0058          // SAR 8253029 - Passed Customer PO
-0059          // SAR 8955606 - Map all Taxed Prices Grid Columns
 0060          // Bug 11904723- PMPN Enhancement- Pass Project Mfg Production Number and
 0061          // Production Short Number
 0074          //
